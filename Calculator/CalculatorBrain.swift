@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 class calculatorBrain{
     
     
@@ -18,21 +20,27 @@ class calculatorBrain{
         accumulator = operand
     }
     
-    var operations: Dictionary<String, Operation> = [
+    private var operations: Dictionary<String, Operation> = [
     
-        "π" : Operation.Constant, //M_PI,
-        "e" : Operation.Constant, //M_E,
-        "√" : Operation.UnaryOperation, //sqrt,
-        "cos" : Operation.UnaryOperation //cos
+        "π" : Operation.Constant(M_PI),
+        "e" : Operation.Constant(M_E),
+        "±" : Operation.UnaryOperation( { -$0 } ),
+        "√" : Operation.UnaryOperation(sqrt),
+        "cos" : Operation.UnaryOperation(cos),
+        "×" : Operation.BinaryOperation( {$0 * $1} ),
+        "÷" : Operation.BinaryOperation( {$0 / $1} ),
+        "+" : Operation.BinaryOperation( {$0 + $1} ),
+        "−" : Operation.BinaryOperation( {$0 - $1} ),
+        "=" : Operation.Equals
     
     ]
     
     //Enums are to enumerate dvalues. It can have Methods. It cannot have computed var, It cannot have inherit
-    enum Operation {
+    private enum Operation {
         
-        case constant
-        case UnaryOperation
-        case BinaryOperation
+        case Constant(Double)
+        case UnaryOperation( (Double) -> Double)
+        case BinaryOperation( (Double, Double) -> Double )
         case Equals
     
     }
@@ -41,11 +49,41 @@ class calculatorBrain{
         
         if let operation = operations[symbol]{
             //make switch
+            
+            switch operation {
+            case .Constant(let value):
+                accumulator = value
+                break
+            case .UnaryOperation(let function):
+                accumulator = function(accumulator)
+                break
+            case .BinaryOperation(let function):
+                executePendingBinaryOperation()
+                pending = PendingBinaryOperationInfo(binaryFunction: function, firstOperand: accumulator)
+                break
+            case .Equals :
+                executePendingBinaryOperation()
+                break
+            }
+            
         }
+    }
+    
+    private func executePendingBinaryOperation(){
+        if pending != nil {
+            accumulator = pending!.binaryFunction(pending!.firstOperand, accumulator)
+            pending = nil
+        }
+
+    }
+    
+    private var pending : PendingBinaryOperationInfo?
+    
+    private struct PendingBinaryOperationInfo {
         
-        
-        
-        
+        var binaryFunction: (Double, Double) -> Double
+        var firstOperand : Double
+    
     }
     
     /*
