@@ -11,23 +11,40 @@ import Foundation
 class calculatorBrain{
     
     
-    private var accumulator = 0.0
+    fileprivate var accumulator = 0.0
     
     
-    func setOperand(operand: Double){
+    func setOperand(_ operand: Double){
         accumulator = operand
     }
     
+    var operations: Dictionary<String, Operation> = [
     
-    func performOperation(symbol: String){
+        "π" : Operation.Constant, //M_PI,
+        "e" : Operation.Constant, //M_E,
+        "√" : Operation.UnaryOperation, //sqrt,
+        "cos" : Operation.UnaryOperation //cos
+    
+    ]
+    
+    //Enums are to enumerate dvalues. It can have Methods. It cannot have computed var, It cannot have inherit
+    enum Operation {
         
-        switch symbol {
-            
-        case "π": accumulator = M_PI
-        case "√": accumulator = sqrt(accumulator)
-        default: break
-            
+        case constant
+        case UnaryOperation
+        case BinaryOperation
+        case Equals
+    
+    }
+    
+    func performOperation(_ symbol: String){
+        
+        if let operation = operations[symbol]{
+            //make switch
         }
+        
+        
+        
         
     }
     

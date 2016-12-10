@@ -11,14 +11,14 @@ import UIKit
 class ViewController: UIViewController {
     
     
-    @IBOutlet private weak var display: UILabel!
+    @IBOutlet fileprivate weak var display: UILabel!
     
     
-    private var userIsInTheMiddleOfTyping = false
+    fileprivate var userIsInTheMiddleOfTyping = false
     
     
     //Method to digit buttons
-    @IBAction private func touchDigit(sender: UIButton) {
+    @IBAction fileprivate func touchDigit(_ sender: UIButton) {
         
         let digit = sender.currentTitle!
         
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
     
     
     //
-    private var displayValue: Double {
+    fileprivate var displayValue: Double {
         
         get{
             return Double(display.text!)!
@@ -50,12 +50,12 @@ class ViewController: UIViewController {
     
     
     
-    private var brain = calculatorBrain();
+    fileprivate var brain = calculatorBrain();
     
     
     //method to operation buttons
     
-    @IBAction private func performOperation(sender: UIButton) {
+    @IBAction fileprivate func performOperation(_ sender: UIButton) {
         
         if(userIsInTheMiddleOfTyping){
             brain.setOperand(displayValue)
